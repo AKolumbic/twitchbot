@@ -1,0 +1,1 @@
+const dice: AppTypes.Dice[] = [20, 4, 6, 8, 10, 12, 100];
