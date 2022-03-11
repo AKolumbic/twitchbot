@@ -1,4 +1,4 @@
-import { rollDice } from "./dice-roll";
+import { rollDice, determineCampaign } from "./index";
 
 export function executeCommand(
   client: any,
@@ -9,6 +9,11 @@ export function executeCommand(
     case '!roll':
       const num = rollDice();
       client.say(target, `You rolled a ${num}`);
+    case '!campaign':
+      const campaignText = determineCampaign();
+      client.say(campaignText);
+    case '!lurk':
+      console.log(`${target} is lurking...`);
     default:
       console.log(`* Unknown command ${commandName}`);
   }
