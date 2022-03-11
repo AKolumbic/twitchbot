@@ -13,5 +13,8 @@ function diceRoll(
   numberOfRolls?: number,
   modifier?: number
 ): string {
-  return `${Math.floor(Math.random() * die) + 1}`;
+  if (die) {
+    return `${Math.floor(Math.random() * die) + 1}`;
+  }
+  return `${Math.floor(Math.random() * 20) + 1}`;
 }

@@ -1,15 +1,19 @@
-require('dotenv').config()
-const tmi = require('tmi.js');
+// require('dotenv').config();
+import dotenv from 'dotenv';
+import tmi, { Options } from 'tmi.js';
 import { executeCommand } from './utilities/execute-command';
 
+// Configure Environment Variables
+dotenv.config();
+
 // Define configuration options
-const opts = {
+const opts: Options = {
   identity: {
     username: process.env.BOT_USERNAME,
     password: process.env.PASSWORD
   },
   channels: [
-    process.env.CHANNEL_NAME
+    'drosshole'
   ]
 };
 
@@ -22,7 +26,8 @@ client.on('connected', onConnectedHandler);
 client.connect();
 
 // Called every time a message comes in
-function onMessageHandler(target, context, msg, self) {
+function onMessageHandler(target: string, context: any, msg: string, self: any) {
+  console.log('Message Handler Args: ', { target, context, msg, self });
   // Log context
   console.log('onMessageHandler context: ', context);
   // Ignore messages from the bot
@@ -34,6 +39,6 @@ function onMessageHandler(target, context, msg, self) {
 }
 
 // Called every time the bot connects to Twitch chat
-function onConnectedHandler(addr, port) {
+function onConnectedHandler(addr: string, port: number) {
   console.log(`* Connected to ${addr}:${port}`);
 }

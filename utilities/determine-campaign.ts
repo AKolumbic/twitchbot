@@ -1,4 +1,4 @@
-export function determineCampaign(): string {
+export function determineCampaign(): any {
   const today = new Intl.DateTimeFormat(
     'en-US',
     { weekday: 'long' }

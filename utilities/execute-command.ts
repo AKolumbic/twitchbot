@@ -1,14 +1,11 @@
-import { rollDice, determineCampaign } from "./index";
+import { rollDice, determineCampaign, sayMyName } from "./index";
 
 export function executeCommand(
   client: any,
   commandName: string,
   target: string
 ): void {
-  if (commandName.charAt(0) !== '!') {
-    console.log(`* Unknown command ${commandName}`);
-    return;
-  }
+  sayMyName('Heisenberg');
   switch (commandName.toLocaleLowerCase()) {
     case '!help':
       client.say()
