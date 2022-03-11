@@ -5,5 +5,23 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.15"
-  }
+  },
+  "name": "twitchbot",
+  "description": "a bot for my twitch channel",
+  "version": "1.0.0",
+  "main": "bot.ts",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AKolumbic/twitchbot.git"
+  },
+  "author": "Andrew Kolumbic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AKolumbic/twitchbot/issues"
+  },
+  "homepage": "https://github.com/AKolumbic/twitchbot#readme"
 }
