@@ -1,5 +1,5 @@
 import { Options, Client, Userstate } from 'tmi.js';
-import { now } from 'lodash';
+import _ from 'lodash';
 
 import { executeCommand } from './execute-command';
 import { username, password, channels } from '../secrets';
@@ -28,7 +28,7 @@ export function configureClient() {
 
   // EVENT HANDLERS
   client.on('connected', (address: string, port: number) => {
-    console.log(`** Connected to ${address} on Port:${port} at ${new Date(now())} **`);
+    console.log(`** Connected to ${address} on Port:${port} at ${new Date(_.now())} **`);
   });
 
   client.on('disconnected', (reason: string) => {
@@ -36,7 +36,7 @@ export function configureClient() {
   });
 
   client.on('reconnect', () => {
-    console.log(`[${new Date(now())}]: Reconnecting...`);
+    console.log(`[${new Date(_.now())}]: Reconnecting...`);
   });
 
   client.on('message', (
