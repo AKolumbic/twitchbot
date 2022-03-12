@@ -1,5 +1,5 @@
 import { Options, Client, Userstate } from 'tmi.js';
-import _ from 'lodash';
+import { now } from 'lodash';
 
 import { executeCommand } from './execute-command';
 import { username, password, channels } from '../secrets';
@@ -11,7 +11,10 @@ export function configureClient() {
     },
     connection: {
       reconnect: true,
-      secure: true
+      secure: true,
+      timeout: 180000,
+      reconnectDecay: 1.4,
+      reconnectInterval: 1000,
     },
     identity: {
       username,
@@ -23,14 +26,19 @@ export function configureClient() {
   // Connect to Twitch:
   client.connect();
 
-  // Called every time the bot connects to Twitch chat
+  // EVENT HANDLERS
   client.on('connected', (address: string, port: number) => {
-    console.log(
-      `** DROSSBOT Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
-    );
+    console.log(`** Connected to ${address} on Port:${port} at ${new Date(now())} **`);
   });
 
-  // Called every time a message comes in
+  client.on('disconnected', (reason: string) => {
+    console.log(`Disconnected: ${reason}`)
+  });
+
+  client.on('reconnect', () => {
+    console.log(`[${new Date(now())}]: Reconnecting...`);
+  });
+
   client.on('message', (
     target: string,
     userstate: Userstate,
