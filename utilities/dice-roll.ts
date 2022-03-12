@@ -14,5 +14,9 @@ export function rollDice(die?: Dice) {
 export function rollFormula(
   formula: string
 ): string {
+  console.log({
+    formula,
+    roll: formula.split(' ')
+  })
   return `${Math.floor(Math.random() * 20) + 1}`;
 }

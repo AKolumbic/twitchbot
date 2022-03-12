@@ -21,7 +21,7 @@ export function executeCommand(
   // Exit early if not a command
   if (command.charAt(0) !== '!') { return }
 
-  // Dynamic rolls are a special case.
+  // Dynamic Rolls need to be handled separately.
   const dynamicRoll = command.match(dynamicDiceRegEx);
   if (dynamicRoll) {
     const roll = rollFormula(dynamicRoll[0].split(' ')[1]);

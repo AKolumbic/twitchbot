@@ -26,7 +26,7 @@ export function configureClient() {
   // Called every time the bot connects to Twitch chat
   client.on('connected', (address: string, port: number) => {
     console.log(
-      `** Twitchbot Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
+      `** DROSSBOT Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
     );
   });
 
