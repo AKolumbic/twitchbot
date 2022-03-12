@@ -1,4 +1,6 @@
 import tmi from 'tmi.js';
+import _ from 'lodash';
+
 import { executeCommand } from '../utilities/execute-command';
 
 export function configureClient() {
@@ -28,11 +30,11 @@ export function configureClient() {
     const commandName = msg.trim();
     //@ts-ignore
     // If the command is known, let's execute it
-    executeCommand(client, commandName, target, process.env.CHANNEL);
+    executeCommand(client, commandName, target, process.env.CHANNEL, userstate);
   }
 
   // Called every time the bot connects to Twitch chat
   function onConnectedHandler(addr: string, port: number) {
-    console.log(`* Connected to ${addr} on Port:${port}`);
+    console.log(`* Connected to ${addr} on Port:${port} at ${new Date(_.now())}`);
   }
 }

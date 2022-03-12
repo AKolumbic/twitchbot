@@ -1,11 +1,12 @@
-import { Client } from 'tmi.js';
+import { Client, Userstate } from 'tmi.js';
 import { rollDice, determineCampaign } from "./index";
 
 export function executeCommand(
   client: Client,
   commandName: string,
   target: string,
-  channel: string
+  channel: string,
+  userstate: Userstate
 ): void {
   switch (commandName.toLocaleLowerCase()) {
     case '!help':
