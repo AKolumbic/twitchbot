@@ -1,7 +1,8 @@
 import { Options, Client, Userstate } from 'tmi.js';
 import _ from 'lodash';
 
-import { executeCommand } from '../utilities/execute-command';
+import { executeCommand } from './execute-command';
+import { executeEasterEgg } from '../utilities/execute-easter-egg';
 
 export function configureClient() {
   // Define configuration options
@@ -44,6 +45,11 @@ export function configureClient() {
   ) => {
     // Ignore messages from the bot
     if (self) { return; }
+
+    // Have some fun
+    if (userstate.username === process.env.EASTER_EGG_USER) {
+      executeEasterEgg(message);
+    }
 
     // Normalize the message
     const command = message.trim().toLowerCase();
