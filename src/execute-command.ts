@@ -1,6 +1,6 @@
 import { Client, Userstate } from 'tmi.js';
 import { rollFormula } from '../utilities/dice-roll';
-import { rollDice, determineCampaign, executeEasterEgg, moderateChat } from "../utilities/index";
+import { rollDice, determineCampaign, executeEasterEgg, moderateChat, getCharacterSheet } from "../utilities/index";
 import { easterEggTrigger, dynamicDiceRegEx, easterEggUser, channels } from '../secrets';
 
 export function executeCommand(
@@ -43,10 +43,10 @@ export function executeCommand(
 
   switch (command) {
     case '!info':
-        client.say(channel,
-          `DROSSBOT: Thanks for watching, ${chatter}! You can interact with the channel by using commands like !roll, !campaign, or !characterSheet.\n
+      client.say(channel,
+        `DROSSBOT: Thanks for watching, ${chatter}! You can interact with the channel by using commands like !roll, !campaign, or !characterSheet.\n
           If you'd like to know more, type !commands in chat!`
-        )
+      )
       break;
 
     case '!commands':
@@ -63,12 +63,16 @@ export function executeCommand(
       client.say(channel, `DROSSBOT: ${campaignText}`);
       break;
 
-    case '!lurk':
-      console.log(`${target} is lurking...`);
-      break;
+    case '!characterSheet':
+      const link = getCharacterSheet();
+      client.say(channel, `${link}`);
 
     case '!socials':
       client.say(channel, `DROSSBOT: You can find me at @drosshole all over the internet`)
+      break;
+
+    case '!lurk':
+      console.log(`${target} is lurking...`);
       break;
 
     default:
