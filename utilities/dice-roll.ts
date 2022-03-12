@@ -7,6 +7,8 @@ export function rollDice(die?: Dice) {
   if (!die) {
     return Math.floor(Math.random() * dice[0]) + 1;
   }
+
+  return Math.floor(Math.random() * die) + 1;
 }
 
 function diceRoll(
