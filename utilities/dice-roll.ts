@@ -9,7 +9,7 @@ export function rollDice(die?: Dice) {
   }
 
   return Math.floor(Math.random() * die) + 1;
-}
+};
 
 export function rollFormula(
   formula: string
@@ -17,9 +17,15 @@ export function rollFormula(
   const numberOfRolls: number = Number(formula.split(' ')[0].split('d')[0]);
   const die: Dice = Number(formula.split(' ')[0].split('d')[0]) as Dice;
 
-  return Array(numberOfRolls).fill(null).map(() => {
-    return `${Math.floor(Math.random() * die) + 1}`
-  }).reduce((x, y) => {
+  const results = Array(numberOfRolls).fill(null).map(() => {
+    return Math.floor(Math.random() * die) + 1
+  });
+
+  const stringifiedResults = results.join(", ")
+
+  const total = results.reduce((x, y) => {
     return x + y;
-  })
-}
+  }, 0);
+
+  return `${stringifiedResults} for a total of ${total}`;
+};

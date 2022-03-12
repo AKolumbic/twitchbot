@@ -36,8 +36,8 @@ export function executeCommand(
   // Dynamic Rolls need to be handled separately.
   const dynamicRoll = command.match(dynamicDiceRegEx);
   if (dynamicRoll) {
-    const roll = rollFormula(dynamicRoll[0].split(' ')[1]);
-    client.say(channel, `DROSSBOT: ${chatter} rolled a ${roll}`);
+    const result = rollFormula(dynamicRoll[0].split(' ')[1]);
+    client.say(channel, `DROSSBOT: ${chatter} rolled ${result}`);
     return;
   }
 
