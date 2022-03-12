@@ -1,4 +1,4 @@
-export function determineCampaign(): string {
+export function getCampaignDescription(): string {
   const day = new Intl.DateTimeFormat(
     'en-US',
     { weekday: 'long' }

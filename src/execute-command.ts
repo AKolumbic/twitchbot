@@ -1,6 +1,6 @@
 import { Client, Userstate } from 'tmi.js';
 import { rollFormula } from '../utilities/dice-roll';
-import { rollDice, determineCampaign, executeEasterEgg, moderateChat, getCharacterSheet } from "../utilities/index";
+import { rollDice, getCampaignDescription, executeEasterEgg, moderateChat, getCharacterSheet } from "../utilities/index";
 import { username, easterEggTrigger, dynamicDiceRegEx, easterEggUser, channels } from '../secrets';
 
 export function executeCommand(
@@ -54,13 +54,22 @@ export function executeCommand(
       break;
 
     case '!roll':
-      const roll = rollDice();
-      client.say(channel, `DROSSBOT: ${chatter} rolled a ${roll}`);
-      break;
+      const roll = rollDice(20);
+
+      if (roll === 20) {
+        client.say(channel, `DROSSBOT: ${chatter} rolled a ${roll} - CRITICAL ROLL!`);
+        break;
+      } else if (roll === 1) {
+        client.say(channel, `DROSSBOT: ${chatter} rolled a ${roll} - CRITICAL FAIL!`);
+        break;
+      } else {
+        client.say(channel, `DROSSBOT: ${chatter} rolled a ${roll}`);
+        break;
+      }
 
     case '!campaign':
-      const campaignText = determineCampaign();
-      client.say(channel, `DROSSBOT: ${campaignText}`);
+      const campaignDescription = getCampaignDescription();
+      client.say(channel, `DROSSBOT: ${campaignDescription}`);
       break;
 
     case '!character sheet':
