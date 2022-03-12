@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import { executeCommand } from './execute-command';
 import { executeEasterEgg } from '../utilities/execute-easter-egg';
+import { username, password, channels } from '../secrets';
 
 export function configureClient() {
   // Define configuration options
@@ -15,11 +16,10 @@ export function configureClient() {
       secure: true
     },
     identity: {
-      username: process.env.BOT_USERNAME,
-      password: process.env.PASSWORD
+      username,
+      password
     },
-    //@ts-ignore
-    channels: [process.env.CHANNEL]
+    channels
   };
 
   // Create a client with our options
