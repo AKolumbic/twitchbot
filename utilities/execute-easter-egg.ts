@@ -1,5 +1,5 @@
-export function executeEasterEgg(message: string) {
+export function executeEasterEgg(easterEggUser: string, message: string) {
   if (message.toLowerCase().includes('hi')) {
-    return `Hey ${process.env.EASTER_EGG_USER}, thanks for watching. This is a robot btw, not Andrew, he has been....replaced.`
+    return `Hey ${easterEggUser}, thanks for watching. This is a robot btw, not Andrew, he has been....replaced.`
   }
 }

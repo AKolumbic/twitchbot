@@ -2,11 +2,10 @@ import { Options, Client, Userstate } from 'tmi.js';
 import _ from 'lodash';
 
 import { executeCommand } from './execute-command';
-import { executeEasterEgg } from '../utilities/execute-easter-egg';
+import { username, password, channels } from '../secrets';
 
 export function configureClient() {
-  // Define configuration options
-  const options: Options = {
+  const client = new Client({
     options: {
       debug: true
     },
@@ -15,24 +14,19 @@ export function configureClient() {
       secure: true
     },
     identity: {
-      username: process.env.BOT_USERNAME,
-      password: process.env.PASSWORD
+      username,
+      password
     },
-    //@ts-ignore
-    channels: [process.env.CHANNEL]
-  };
-
-  // Create a client with our options
-  const client: Client = new Client(options);
+    channels
+  } as Options);
 
   // Connect to Twitch:
   client.connect();
 
-  // Register our event handlers (defined below)
   // Called every time the bot connects to Twitch chat
   client.on('connected', (address: string, port: number) => {
     console.log(
-      `** Twitchbot Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
+      `** DROSSBOT Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
     );
   });
 
@@ -46,23 +40,9 @@ export function configureClient() {
     // Ignore messages from the bot
     if (self) { return; }
 
-    // Have some fun
-    if (userstate.username === process.env.EASTER_EGG_USER) {
-      executeEasterEgg(message);
-    }
-
-    // Normalize the message
-    const command = message.trim().toLowerCase();
-
-    // Exit early if not a command
-    if (command.charAt(0) !== '!') { return }
-
-    // Since the message is a command, it gets executed
     executeCommand(
-      //@ts-ignore
-      process.env.CHANNEL,
-      command,
       client,
+      message,
       target,
       userstate,
     );
