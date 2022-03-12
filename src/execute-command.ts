@@ -1,7 +1,7 @@
 import { Client, Userstate } from 'tmi.js';
 import { rollFormula } from '../utilities/dice-roll';
 import { rollDice, determineCampaign, executeEasterEgg, moderateChat, getCharacterSheet } from "../utilities/index";
-import { easterEggTrigger, dynamicDiceRegEx, easterEggUser, channels } from '../secrets';
+import { username, easterEggTrigger, dynamicDiceRegEx, easterEggUser, channels } from '../secrets';
 
 export function executeCommand(
   client: Client,
@@ -14,7 +14,7 @@ export function executeCommand(
   const command = message.trim().toLowerCase();
 
   // Earliest Exit Point
-  if (channel === chatter && command === '!info') {
+  if (userstate.username === username && command === '!info') {
     client.say(channel,
       `DROSSBOT: Thanks for watching! You can interact with the channel by using commands like !roll, !campaign, or !characterSheet.\n
       If you'd like to know more, type !commands in chat!`
@@ -63,7 +63,7 @@ export function executeCommand(
       client.say(channel, `DROSSBOT: ${campaignText}`);
       break;
 
-    case '!characterSheet':
+    case '!character sheet':
       const link = getCharacterSheet();
       client.say(channel, `DROSSBOT: ${link}`);
 
