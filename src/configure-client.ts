@@ -1,7 +1,7 @@
 import { Options, Client, Userstate } from 'tmi.js';
 import _ from 'lodash';
 
-import { executeCommand } from '../utilities/execute-command';
+import { executeCommand } from './execute-command';
 
 export function configureClient() {
   // Define configuration options
