@@ -40,10 +40,7 @@ export function configureClient() {
     // Ignore messages from the bot
     if (self) { return; }
 
-    // Since the message is a command, it gets executed
     executeCommand(
-      //@ts-ignore
-      process.env.CHANNEL,
       client,
       message,
       target,

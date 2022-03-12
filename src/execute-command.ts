@@ -1,15 +1,15 @@
 import { Client, Userstate } from 'tmi.js';
 import { rollFormula } from '../utilities/dice-roll';
 import { rollDice, determineCampaign, executeEasterEgg } from "../utilities/index";
-import { easterEggTrigger, dynamicDiceRegEx, easterEggUser } from '../secrets';
+import { easterEggTrigger, dynamicDiceRegEx, easterEggUser, channels } from '../secrets';
 
 export function executeCommand(
-  channel: string,
   client: Client,
   message: string,
   target: string,
   userstate: Userstate,
 ): void {
+  const channel = channels[0];
   // Have some fun
   if (userstate.username.toLowerCase() === easterEggTrigger) {
     executeEasterEgg(easterEggUser, message);

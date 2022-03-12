@@ -14,9 +14,12 @@ export function rollDice(die?: Dice) {
 export function rollFormula(
   formula: string
 ): string {
-  console.log({
-    formula,
-    roll: formula.split(' ')
+  const numberOfRolls: number = Number(formula.split(' ')[0].split('d')[0]);
+  const die: Dice = Number(formula.split(' ')[0].split('d')[0]) as Dice;
+
+  return Array(numberOfRolls).fill(null).map(() => {
+    return `${Math.floor(Math.random() * die) + 1}`
+  }).reduce((x, y) => {
+    return x + y;
   })
-  return `${Math.floor(Math.random() * 20) + 1}`;
 }
