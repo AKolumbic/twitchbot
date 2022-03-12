@@ -2,11 +2,9 @@ import { Options, Client, Userstate } from 'tmi.js';
 import _ from 'lodash';
 
 import { executeCommand } from './execute-command';
-import { executeEasterEgg } from '../utilities/execute-easter-egg';
 
 export function configureClient() {
-  // Define configuration options
-  const options: Options = {
+  const client: Client = new Client({
     options: {
       debug: true
     },
@@ -20,10 +18,7 @@ export function configureClient() {
     },
     //@ts-ignore
     channels: [process.env.CHANNEL]
-  };
-
-  // Create a client with our options
-  const client: Client = new Client(options);
+  } as Options);
 
   // Connect to Twitch:
   client.connect();
@@ -46,23 +41,12 @@ export function configureClient() {
     // Ignore messages from the bot
     if (self) { return; }
 
-    // Have some fun
-    if (userstate.username === process.env.EASTER_EGG_USER) {
-      executeEasterEgg(message);
-    }
-
-    // Normalize the message
-    const command = message.trim().toLowerCase();
-
-    // Exit early if not a command
-    if (command.charAt(0) !== '!') { return }
-
     // Since the message is a command, it gets executed
     executeCommand(
       //@ts-ignore
       process.env.CHANNEL,
-      command,
       client,
+      message,
       target,
       userstate,
     );

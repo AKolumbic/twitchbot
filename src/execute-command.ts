@@ -1,15 +1,30 @@
 import { Client, Userstate } from 'tmi.js';
-import { rollDice, determineCampaign } from "../utilities/index";
+import { rollFormula } from '../utilities/dice-roll';
+import { rollDice, determineCampaign, executeEasterEgg } from "../utilities/index";
+import { easterEggTrigger, dynamicDiceRegEx, easterEggUser } from '../secrets';
 
 export function executeCommand(
   channel: string,
-  command: string,
   client: Client,
+  message: string,
   target: string,
   userstate: Userstate,
 ): void {
-  if (userstate.subscriber === false && rollDice(100) < 10) {
-    client.say(channel, `DROSSBOT: Hey ${target}, don't forget to subscribe!`)
+  // Have some fun
+  if (userstate.username === easterEggTrigger) {
+    executeEasterEgg(easterEggUser, message);
+  }
+
+  // Normalize the message
+  const command = message.trim().toLowerCase();
+
+  // Exit early if not a command
+  if (command.charAt(0) !== '!') { return }
+  const dynamicRoll = command.match(dynamicDiceRegEx);
+  if (dynamicRoll) {
+    const roll = rollFormula(dynamicRoll[0].split(' ')[1]);
+    client.say(channel, `DROSSBOT: ${userstate.username} rolled a ${roll}`);
+    return;
   }
 
   switch (command) {
@@ -51,5 +66,9 @@ export function executeCommand(
 
     default:
       client.say(channel, `DROSSBOT: Sorry ${userstate.username}, ${command} is an invalid command`);
+  }
+
+  if (userstate.subscriber === false && rollDice(100) < 10) {
+    client.say(channel, `DROSSBOT: Hey ${target}, don't forget to subscribe!`)
   }
 }

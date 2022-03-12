@@ -11,13 +11,8 @@ export function rollDice(die?: Dice) {
   return Math.floor(Math.random() * die) + 1;
 }
 
-function diceRoll(
-  die?: Dice,
-  numberOfRolls?: number,
-  modifier?: number
+export function rollFormula(
+  formula: string
 ): string {
-  if (die) {
-    return `${Math.floor(Math.random() * die) + 1}`;
-  }
   return `${Math.floor(Math.random() * 20) + 1}`;
 }
