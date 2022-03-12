@@ -11,7 +11,10 @@ export function configureClient() {
     },
     connection: {
       reconnect: true,
-      secure: true
+      secure: true,
+      timeout: 180000,
+      reconnectDecay: 1.4,
+      reconnectInterval: 1000,
     },
     identity: {
       username,
@@ -26,7 +29,7 @@ export function configureClient() {
   // Called every time the bot connects to Twitch chat
   client.on('connected', (address: string, port: number) => {
     console.log(
-      `** DROSSBOT Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
+      `** Connected to ${address} on Port:${port} at ${new Date(_.now())} **`
     );
   });
 
@@ -47,4 +50,12 @@ export function configureClient() {
       userstate,
     );
   });
+
+  client.on('disconnected', (reason: string) => {
+    console.log(`Disconnected: ${reason}`)
+  })
+
+  client.on('reconnect', () => {
+    console.log(`[${new Date(_.now())}]: Reconnecting...`);
+  })
 }
