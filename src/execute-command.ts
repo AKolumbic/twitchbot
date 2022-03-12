@@ -11,7 +11,7 @@ export function executeCommand(
   userstate: Userstate,
 ): void {
   // Have some fun
-  if (userstate.username === easterEggTrigger) {
+  if (userstate.username.toLowerCase() === easterEggTrigger) {
     executeEasterEgg(easterEggUser, message);
   }
 
@@ -20,6 +20,8 @@ export function executeCommand(
 
   // Exit early if not a command
   if (command.charAt(0) !== '!') { return }
+
+  // Dynamic rolls are a special case.
   const dynamicRoll = command.match(dynamicDiceRegEx);
   if (dynamicRoll) {
     const roll = rollFormula(dynamicRoll[0].split(' ')[1]);

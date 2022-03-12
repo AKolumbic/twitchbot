@@ -2,9 +2,10 @@ import { Options, Client, Userstate } from 'tmi.js';
 import _ from 'lodash';
 
 import { executeCommand } from './execute-command';
+import { username, password, channels } from '../secrets';
 
 export function configureClient() {
-  const client: Client = new Client({
+  const client = new Client({
     options: {
       debug: true
     },
@@ -13,17 +14,15 @@ export function configureClient() {
       secure: true
     },
     identity: {
-      username: process.env.BOT_USERNAME,
-      password: process.env.PASSWORD
+      username,
+      password
     },
-    //@ts-ignore
-    channels: [process.env.CHANNEL]
+    channels
   } as Options);
 
   // Connect to Twitch:
   client.connect();
 
-  // Register our event handlers (defined below)
   // Called every time the bot connects to Twitch chat
   client.on('connected', (address: string, port: number) => {
     console.log(
