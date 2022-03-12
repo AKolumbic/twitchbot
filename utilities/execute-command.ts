@@ -1,5 +1,5 @@
 import { Client } from 'tmi.js';
-import { rollDice, determineCampaign, sayMyName } from "./index";
+import { rollDice, determineCampaign } from "./index";
 
 export function executeCommand(
   client: Client,
@@ -7,7 +7,6 @@ export function executeCommand(
   target: string,
   channel: string
 ): void {
-  sayMyName('Heisenberg');
   switch (commandName.toLocaleLowerCase()) {
     case '!help':
       client.say(channel, '')

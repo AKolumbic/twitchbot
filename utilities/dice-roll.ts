@@ -1,4 +1,5 @@
-type Dice = 4 | 6 | 8 | 10 | 12 | 20 | 100;
+import { Dice } from "../types";
+
 const dice: Dice[] = [20, 4, 6, 8, 10, 12, 100];
 
 // Function called when the "roll" command is issued
