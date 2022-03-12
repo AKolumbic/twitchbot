@@ -65,7 +65,7 @@ export function executeCommand(
 
     case '!characterSheet':
       const link = getCharacterSheet();
-      client.say(channel, `${link}`);
+      client.say(channel, `DROSSBOT: ${link}`);
 
     case '!socials':
       client.say(channel, `DROSSBOT: You can find me at @drosshole all over the internet`)
