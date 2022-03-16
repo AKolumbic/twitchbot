@@ -41,5 +41,10 @@ export function rickRoll(
     chatbot.say(channel, `DROSSBOT: Never gonna tell a lie and hurt you`);
   }
 
+  if (command === 'never gonna tell a lie') {
+    wasRickRolled = true;
+    chatbot.say(channel, `DROSSBOT: And hurt you`);
+  }
+
   return wasRickRolled;
 }
