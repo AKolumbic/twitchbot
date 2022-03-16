@@ -1,4 +1,5 @@
-import { Client } from 'tmi.js';
+import { Client, Userstate } from 'tmi.js';
+import { username } from '../../secrets';
 import { getCampaignDescription, getCharacterSheet } from '../utilities';
 
 export function executeBasicCommands(
@@ -9,14 +10,21 @@ export function executeBasicCommands(
 ): void {
   switch (command) {
     case '!info':
-      chatbot.say(channel,
-        `DROSSBOT: Thanks for watching, ${chatter}! You can interact with the channel by using commands like !roll, !campaign, or !characterSheet.\n
-          If you'd like to know more, type !commands in chat!`
-      )
+      if (chatter === `@${username}`) {
+        chatbot.say(channel,
+          `DROSSBOT: Thanks for watching! You can interact with the channel by using commands like !roll, !campaign, or !characterSheet.
+            If you'd like to know more, type !commands in chat!`
+        )
+      } else {
+        chatbot.say(channel,
+          `DROSSBOT: Thanks for watching, ${chatter}! You can interact with the channel by using commands like !roll, !campaign, or !characterSheet.
+            If you'd like to know more, type !commands in chat!`
+        )
+      }
       break;
 
     case '!commands':
-      chatbot.say(channel, 'DROSSBOT: Valid Commands: !info, !roll, !campaign, !characterSheet, !socials')
+      chatbot.say(channel, `DROSSBOT: Valid Commands: !info, !roll, !campaign, !character sheet, !socials. There's some secret ones too...`)
       break;
 
     case '!campaign':
@@ -27,9 +35,10 @@ export function executeBasicCommands(
     case '!character sheet':
       const link = getCharacterSheet();
       chatbot.say(channel, `DROSSBOT: ${link}`);
+      break;
 
     case '!socials':
-      chatbot.say(channel, `DROSSBOT: You can find me at @drosshole all over the internet`)
+      chatbot.say(channel, `DROSSBOT: You can find me at @${username} all over the internet`)
       break;
 
     case '!lurk':
