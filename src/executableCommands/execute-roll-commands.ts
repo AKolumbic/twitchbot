@@ -1,6 +1,6 @@
 import { Client } from 'tmi.js';
 import { rollDice, rollFormula } from '../utilities/';
-import { channels } from '../../secrets';
+import { channels, dynamicDiceRegEx } from '../../secrets';
 
 
 export function executeRollCommands(
@@ -9,7 +9,7 @@ export function executeRollCommands(
   chatbot: Client
 ): void {
   const channel = channels[0];
-  const dynamicRoll = command.match(/^!roll\s\dd[4|6|8|10|12|20|100]/gm) as RegExpExecArray;
+  const dynamicRoll = command.match(dynamicDiceRegEx) as RegExpExecArray;
   const roll = rollDice(20);
   const secondRoll = rollDice(20);
 
