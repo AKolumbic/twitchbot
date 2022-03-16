@@ -1,6 +1,5 @@
 import { Client, Userstate } from 'tmi.js';
-import { rollDice, moderateChat } from '../utilities/index';
-import { username } from '../../secrets';
+import { moderateChat } from '../utilities/index';
 import {
   executeBasicCommands,
   executeRollCommands,
@@ -21,10 +20,10 @@ export function executeCommand(
   moderateChat(command, chatbot, channel, userstate);
 
   // Have some fun.
-  executeEasterEggs(chatter, chatbot, command, channel);
+  const easterEggExecuted = executeEasterEggs(target, chatbot, command, channel);
 
-  // Exit early if not a command.
-  if (command.charAt(0) !== '!') { return }
+  // Exit early if not a command or an easter egg was executed.
+  if (command.charAt(0) !== '!' || easterEggExecuted) { return }
 
   // Roll commands.
   if (command.split(' ')[0] === '!roll') {
@@ -32,6 +31,6 @@ export function executeCommand(
     return;
   }
 
-  // Single-word commands.
+  // Simple commands.
   executeBasicCommands(command, channel, chatbot, chatter);
 }
