@@ -1,12 +1,13 @@
 import { Client } from 'tmi.js';
 import { easterEggTriggers, easterEggUser } from '../../secrets';
-import { simulateBattle } from '../utilities/simulate-battleground';
+import { simulateBattle, rickRoll } from '../utilities';
 
 export function executeEasterEggs(
   target: string,
   chatbot: Client,
   command: string,
-  channel: string
+  channel: string,
+  messageID: string
 ): boolean {
   let easterEggExecuted = false;
 
@@ -19,6 +20,8 @@ export function executeEasterEggs(
     easterEggExecuted = true;
     chatbot.say(channel, `DROSSBOT: ${simulateBattle()}`)
   }
+
+  if (rickRoll(command, chatbot, channel, messageID)) { easterEggExecuted = true };
 
   return easterEggExecuted;
 }

@@ -15,12 +15,19 @@ export function executeCommand(
 ): void {
   const chatter = `@${userstate.username}`;
   const command = message.trim().toLowerCase();
+  const messageID = userstate.id as string;
 
   // Check message for banned words and inform the chatter that their language is unacceptable.
-  moderateChat(command, chatbot, channel, userstate);
+  moderateChat(command, chatbot, channel, userstate, messageID);
 
   // Have some fun.
-  const easterEggExecuted = executeEasterEggs(target, chatbot, command, channel);
+  const easterEggExecuted = executeEasterEggs(
+    target,
+    chatbot,
+    command,
+    channel,
+    messageID
+  );
 
   // Exit early if not a command or an easter egg was executed.
   if (command.charAt(0) !== '!' || easterEggExecuted) { return }
