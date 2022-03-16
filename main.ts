@@ -1,4 +1,4 @@
-import { configureClient } from './src/configure-client';
+import { configureBot } from './src/configure-bot';
 
-// Configure TMI Client
-configureClient();
+// Configure TMI Bot Client
+configureBot();

@@ -1,11 +1,12 @@
 import { Options, Client, Userstate } from 'tmi.js';
 import _ from 'lodash';
 
-import { executeCommand } from './execute-command';
+import { executeCommand } from './executableCommands/execute-command';
 import { username, password, channels } from '../secrets';
 
-export function configureClient() {
-  const client = new Client({
+export function configureBot() {
+  const channel = channels[0];
+  const chatbot = new Client({
     options: {
       debug: true
     },
@@ -24,32 +25,34 @@ export function configureClient() {
   } as Options);
 
   // Connect to Twitch:
-  client.connect();
+  chatbot.connect();
 
   // EVENT HANDLERS
-  client.on('connected', (address: string, port: number) => {
-    console.log(`** Connected to ${address} on Port:${port} at ${new Date(_.now())} **`);
+  chatbot.on('connected', (address: string, port: number) => {
+    console.log(`** [${new Date(_.now())}]: Connected to ${address} on Port:${port} **`);
+    chatbot.say(channel, `DROSSBOT ACTIVATED: type !info in chat to learn more.`);
   });
 
-  client.on('disconnected', (reason: string) => {
-    console.log(`Disconnected: ${reason}`)
+  chatbot.on('disconnected', (reason: string) => {
+    console.log(`[${new Date(_.now())}]: Disconnected: ${reason}`)
   });
 
-  client.on('reconnect', () => {
+  chatbot.on('reconnect', () => {
     console.log(`[${new Date(_.now())}]: Reconnecting...`);
   });
 
-  client.on('message', (
+  chatbot.on('message', (
     target: string,
     userstate: Userstate,
     message: string,
     self: boolean
   ) => {
-    // Ignore messages from the bot
+    // Ignore messages from the chatbot
     if (self) { return; }
 
     executeCommand(
-      client,
+      channel,
+      chatbot,
       message,
       target,
       userstate,

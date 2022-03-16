@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { characterSheets } from "../secrets";
+import _ from 'lodash';
+import { characterSheets } from '../../secrets';
 
 export function getCharacterSheet(): string {
   const day = new Intl.DateTimeFormat(
