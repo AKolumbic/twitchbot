@@ -45,6 +45,9 @@ export function executeBasicCommands(
       console.log(`${chatter} is lurking...`);
       break;
 
+    case '!secrets':
+      chatbot.say(channel, `Clever, ${chatter}. Try typing 'never gonna give you up' in chat `);
+
     default:
       chatbot.say(channel, `DROSSBOT: Sorry ${chatter}, ${command} is an invalid command`);
   }
