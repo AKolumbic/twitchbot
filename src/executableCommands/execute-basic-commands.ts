@@ -51,6 +51,12 @@ export function executeBasicCommands(
     case `!discord`:
       chatbot.say(channel, `https://discord.gg/W4VhAuU9rx`);
 
+    case `!tip`:
+      chatbot.say(channel, `https://streamlabs.com/drosshole/tip`);
+
+    case `!donate`:
+      chatbot.say(channel, `https://streamlabs.com/drosshole/tip`);
+
     default:
       chatbot.say(channel, `DROSSBOT: Sorry ${chatter}, ${command} is an invalid command`);
   }
