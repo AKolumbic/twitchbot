@@ -3,7 +3,8 @@ import { moderateChat } from '../utilities/index';
 import {
   executeBasicCommands,
   executeRollCommands,
-  executeEasterEggs
+  executeEasterEggs,
+  executeCharacterCommands
 } from '.';
 
 export function executeCommand(
@@ -37,6 +38,9 @@ export function executeCommand(
     executeRollCommands(command, chatter, chatbot);
     return;
   }
+
+  // Character Sheets
+  executeCharacterCommands(command, channel, chatbot);
 
   // Simple commands.
   executeBasicCommands(command, channel, chatbot, chatter);
