@@ -1,6 +1,6 @@
 import { Client, Userstate } from 'tmi.js';
 import { username } from '../../secrets';
-import { getCampaignDescription, getCharacterSheet } from '../utilities';
+import { getCampaignDescription, getCharacterSheet, getPartyMembers } from '../utilities';
 
 export function executeBasicCommands(
   command: string,
@@ -43,6 +43,11 @@ export function executeBasicCommands(
 
     case '!lurk':
       console.log(`${chatter} is lurking...`);
+      break;
+
+    case '!party':
+      const party = getPartyMembers();
+      chatbot.say(channel, `${party}. Type !<character name> in chat to get a link to individual character's DnD Beyond character sheet.`);
       break;
 
     case '!secrets':

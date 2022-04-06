@@ -5,6 +5,7 @@ import { moderateChat } from './moderate-chat';
 import { random, getRandom } from './random-utils';
 import { rickRoll } from './rick-rolls';
 import { simulateBattle } from './simulate-battleground';
+import { getPartyMembers } from './get-party-members';
 
 export {
     rollDice,
@@ -15,5 +16,6 @@ export {
     random,
     getRandom,
     rickRoll,
-    simulateBattle
+    simulateBattle,
+    getPartyMembers
 };
