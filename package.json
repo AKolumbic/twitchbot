@@ -12,6 +12,7 @@
     "@types/node": "^17.0.21",
     "@types/tmi.js": "^1.8.1",
     "ts-node": "^10.7.0",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.6.2"
   },
   "name": "twitchbot",
@@ -19,7 +20,16 @@
   "version": "2.0.0",
   "scripts": {
     "start": "node --experimental-specifier-resolution=node --loader ts-node/esm main.ts",
-    "dev": "ts-node --esm main.ts",
+    "dev": "NODE_OPTIONS=--loader=ts-node/esm node main.ts",
+    "dev:simple": "ts-node-dev --transpile-only main.ts",
+    "dev:watch": "ts-node-dev --respawn --transpile-only main.ts",
+    "build": "tsc",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "start:cjs": "npm run build:cjs && node dist-cjs/main.js",
+    "fix-imports": "node fix-imports.js",
+    "build:prod": "npm run build && npm run fix-imports",
+    "start:prod": "node --experimental-specifier-resolution=node dist/main.js",
+    "run": "node run-bot.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
