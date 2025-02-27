@@ -12,19 +12,19 @@ export class ScheduleCommand implements Command {
   private schedule = [
     {
       day: "Thursday",
-      time: "8:00 PM EST",
+      time: "6:00 PM PST",
       activity: "Pathfinder 2e - Stolen Fate campaign (Gilbert Goldgrin)",
       description: "Weekly Pathfinder 2e session",
     },
     {
       day: "Saturday",
-      time: "7:00 PM EST",
+      time: "6:00 PM PST",
       activity: "D&D - Hometown Heroes campaign (Brodi Dankweed)",
       description: "Biweekly D&D session",
     },
     {
       day: "Various weeknights",
-      time: "9:00 PM EST",
+      time: "6:00 PM PST",
       activity: "Video Games",
       description:
         "Helldivers 2, Hearthstone, Baldur's Gate 3, or Cyberpunk 2077",
