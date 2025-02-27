@@ -1,61 +1,67 @@
-import { Options, Client, Userstate } from 'tmi.js';
-import _ from 'lodash';
+import { Client } from "tmi.js";
+import _ from "lodash";
 
-import { executeCommand } from './executableCommands/execute-command';
-import { username, password, channels } from '../secrets';
+import { TWITCH_CLIENT_OPTIONS, BOT_CONFIG } from "./config";
+import { CommandManager } from "./commands/command-manager";
+import { CommandsCommand } from "./commands/commands.command";
+import { moderationService } from "./services/moderation.service";
 
-export function configureBot() {
-  const channel = channels[0];
-  const chatbot = new Client({
-    options: {
-      debug: true
-    },
-    connection: {
-      reconnect: true,
-      secure: true,
-      timeout: 180000,
-      reconnectDecay: 1.4,
-      reconnectInterval: 1000,
-    },
-    identity: {
-      username,
-      password
-    },
-    channels
-  } as Options);
+export function configureBot(): Client {
+  // Create the Twitch client with our options
+  const chatbot = new Client(TWITCH_CLIENT_OPTIONS);
 
-  // Connect to Twitch:
-  chatbot.connect();
+  // Set up command manager
+  const commandManager = new CommandManager();
+
+  // Register commands that require the commandManager
+  commandManager.registerCommand(new CommandsCommand(commandManager));
+
+  // Connect to Twitch
+  chatbot
+    .connect()
+    .catch((err) => console.error("Error connecting to Twitch:", err));
 
   // EVENT HANDLERS
-  chatbot.on('connected', (address: string, port: number) => {
-    console.log(`** [${new Date(_.now())}]: Connected to ${address} on Port:${port} **`);
-    chatbot.say(channel, `DROSSBOT ACTIVATED: type !info in chat to learn more.`);
+  chatbot.on("connected", (address: string, port: number) => {
+    console.log(
+      `** [${new Date(_.now())}]: Connected to ${address} on Port:${port} **`
+    );
+    chatbot.say(
+      BOT_CONFIG.CHANNELS[0],
+      `${BOT_CONFIG.NAME} ACTIVATED: type !info in chat to learn more.`
+    );
   });
 
-  chatbot.on('disconnected', (reason: string) => {
-    console.log(`[${new Date(_.now())}]: Disconnected: ${reason}`)
+  chatbot.on("disconnected", (reason: string) => {
+    console.log(`[${new Date(_.now())}]: Disconnected: ${reason}`);
   });
 
-  chatbot.on('reconnect', () => {
+  chatbot.on("reconnect", () => {
     console.log(`[${new Date(_.now())}]: Reconnecting...`);
   });
 
-  chatbot.on('message', (
-    target: string,
-    userstate: Userstate,
-    message: string,
-    self: boolean
-  ) => {
-    // Ignore messages from the chatbot
-    if (self) { return; }
+  chatbot.on("message", (target, userstate, message, self) => {
+    try {
+      // Moderate the message
+      const wasModerated = moderationService.moderateMessage(
+        message,
+        chatbot,
+        target,
+        userstate,
+        userstate.id
+      );
 
-    executeCommand(
-      channel,
-      chatbot,
-      message,
-      target,
-      userstate,
-    );
+      // If the message was moderated, don't process it as a command
+      if (wasModerated) {
+        return;
+      }
+
+      // Handle commands
+      commandManager.handleMessage(chatbot, target, userstate, message, self);
+    } catch (error) {
+      console.error("Error processing message:", error);
+    }
   });
+
+  return chatbot;
 }
