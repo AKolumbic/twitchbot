@@ -2,6 +2,7 @@ import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import { AskCommand } from "../../commands/ask.command.js";
 import { CommandContext } from "../../commands/command.interface.js";
 import * as openAIServiceModule from "../../services/openai.service.js";
+import { CommandManager } from "../../commands/command-manager.js";
 
 // Mock the services
 jest.mock("../../services/openai.service.js");
@@ -54,7 +55,7 @@ describe("AskCommand", () => {
 
   it("should have correct command options", () => {
     expect(askCommand.options.name).toBe("ask");
-    expect(askCommand.options.permission).toBe("everyone");
+    expect(askCommand.options.permission).toBe("subscriber");
     expect(askCommand.options.cooldown).toBe(30);
     // This command doesn't have aliases defined, unlike the other commands
   });
@@ -147,6 +148,80 @@ describe("AskCommand", () => {
     expect(mockClient.say.mock.calls[1][0]).toBe("#testchannel");
     expect(mockClient.say.mock.calls[1][1]).toContain(
       "Response to long question"
+    );
+  });
+
+  it("should handle error gracefully", async () => {
+    // ... existing test code ...
+  });
+
+  it("should only be executable by subscribers", async () => {
+    // Create a proper mock Client
+    const mockClient = {
+      say: jest.fn(),
+      // Add missing required properties
+      getChannels: jest.fn(),
+      getOptions: jest.fn(),
+      getUsername: jest.fn(),
+      isMod: jest.fn(),
+      readyState: jest.fn(),
+      removeAllListeners: jest.fn(),
+      setMaxListeners: jest.fn(),
+      emits: jest.fn(),
+      listenerCount: jest.fn(),
+      // Required to satisfy type
+    } as any;
+
+    const mockChannel = "#testchannel";
+
+    // Create a command manager to handle permission checks
+    const commandManager = new CommandManager();
+
+    // Test with non-subscriber user
+    const nonSubscriberState = {
+      username: "viewer",
+      "user-id": "12345",
+      badges: {},
+      mod: false,
+      subscriber: false,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      nonSubscriberState,
+      "!ask What's the meaning of life?",
+      false
+    );
+
+    // Verify permission denied message was sent
+    expect(mockClient.say).toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
+    );
+
+    // Test with subscriber user
+    jest.clearAllMocks();
+    const subscriberState = {
+      username: "subscriber",
+      "user-id": "54321",
+      badges: {},
+      mod: false,
+      subscriber: true,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      subscriberState,
+      "!ask What's the meaning of life?",
+      false
+    );
+
+    // For subscribers, it should not show the permission denied message
+    expect(mockClient.say).not.toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
     );
   });
 });

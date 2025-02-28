@@ -1,4 +1,8 @@
-import { Command, CommandContext, CommandOptions } from "./command.interface.js";
+import {
+  Command,
+  CommandContext,
+  CommandOptions,
+} from "./command.interface.js";
 import { BOT_CONFIG } from "../config.js";
 import { openAIService } from "../services/openai.service.js";
 
@@ -8,7 +12,7 @@ export class AskTtrpgCommand implements Command {
     description: "Ask about Pathfinder 2e or D&D rules, lore, or mechanics",
     usage: "!ttrpg <your question>",
     cooldown: 30, // 30 seconds cooldown to prevent abuse
-    permission: "everyone",
+    permission: "subscriber",
     aliases: ["pf2e", "dnd", "pathfinder"],
   };
 

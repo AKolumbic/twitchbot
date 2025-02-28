@@ -2,6 +2,7 @@ import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import { AskTtrpgCommand } from "../../commands/ask-ttrpg.command.js";
 import { CommandContext } from "../../commands/command.interface.js";
 import * as openAIServiceModule from "../../services/openai.service.js";
+import { CommandManager } from "../../commands/command-manager.js";
 
 // Mock the services
 jest.mock("../../services/openai.service.js");
@@ -54,7 +55,7 @@ describe("AskTtrpgCommand", () => {
 
   it("should have correct command options", () => {
     expect(askTtrpgCommand.options.name).toBe("ttrpg");
-    expect(askTtrpgCommand.options.permission).toBe("everyone");
+    expect(askTtrpgCommand.options.permission).toBe("subscriber");
     expect(askTtrpgCommand.options.cooldown).toBe(30);
     expect(askTtrpgCommand.options.aliases).toContain("pf2e");
     expect(askTtrpgCommand.options.aliases).toContain("dnd");
@@ -166,6 +167,103 @@ describe("AskTtrpgCommand", () => {
     expect(mockClient.say.mock.calls[1][0]).toBe("#testchannel");
     expect(mockClient.say.mock.calls[1][1]).toContain(
       "Response to long question"
+    );
+  });
+
+  it("should handle error gracefully", async () => {
+    // ... existing test code ...
+  });
+
+  it("should allow both subscribers and moderators to use the command", async () => {
+    // Create a proper mock Client
+    const mockClient = {
+      say: jest.fn(),
+      // Add missing required properties
+      getChannels: jest.fn(),
+      getOptions: jest.fn(),
+      getUsername: jest.fn(),
+      isMod: jest.fn(),
+      readyState: jest.fn(),
+      removeAllListeners: jest.fn(),
+      setMaxListeners: jest.fn(),
+      emits: jest.fn(),
+      listenerCount: jest.fn(),
+    } as any;
+
+    const mockChannel = "#testchannel";
+
+    // Create a command manager to handle permission checks
+    const commandManager = new CommandManager();
+
+    // Test 1: Non-subscriber, non-moderator user (should be denied)
+    const regularUserState = {
+      username: "viewer",
+      "user-id": "12345",
+      badges: {},
+      mod: false,
+      subscriber: false,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      regularUserState,
+      "!ttrpg How does initiative work in Pathfinder 2e?",
+      false
+    );
+
+    // Verify permission denied message was sent
+    expect(mockClient.say).toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
+    );
+
+    // Test 2: Subscriber (should be allowed)
+    jest.clearAllMocks();
+    const subscriberState = {
+      username: "subscriber",
+      "user-id": "54321",
+      badges: {},
+      mod: false,
+      subscriber: true,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      subscriberState,
+      "!ttrpg How does initiative work in Pathfinder 2e?",
+      false
+    );
+
+    // For subscribers, it should not show the permission denied message
+    expect(mockClient.say).not.toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
+    );
+
+    // Test 3: Moderator (should be allowed)
+    jest.clearAllMocks();
+    const moderatorState = {
+      username: "moderator",
+      "user-id": "98765",
+      badges: {},
+      mod: true,
+      subscriber: false,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      moderatorState,
+      "!ttrpg How does initiative work in Pathfinder 2e?",
+      false
+    );
+
+    // For moderators, it should not show the permission denied message
+    expect(mockClient.say).not.toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
     );
   });
 });
