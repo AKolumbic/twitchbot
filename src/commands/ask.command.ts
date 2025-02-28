@@ -1,4 +1,8 @@
-import { Command, CommandContext, CommandOptions } from "./command.interface.js";
+import {
+  Command,
+  CommandContext,
+  CommandOptions,
+} from "./command.interface.js";
 import { BOT_CONFIG } from "../config.js";
 import { openAIService } from "../services/openai.service.js";
 
@@ -8,7 +12,7 @@ export class AskCommand implements Command {
     description: "Ask the AI a question about D&D or anything else",
     usage: "!ask <your question>",
     cooldown: 30, // 30 seconds cooldown to prevent abuse
-    permission: "everyone",
+    permission: "subscriber",
   };
 
   async execute(context: CommandContext): Promise<void> {

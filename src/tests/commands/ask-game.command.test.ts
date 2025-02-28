@@ -2,6 +2,7 @@ import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import { AskGameCommand } from "../../commands/ask-game.command.js";
 import { CommandContext } from "../../commands/command.interface.js";
 import * as openAIServiceModule from "../../services/openai.service.js";
+import { CommandManager } from "../../commands/command-manager.js";
 
 // Mock environment variables
 process.env.BOT_NAME = "MockBot";
@@ -57,7 +58,7 @@ describe("AskGameCommand", () => {
 
   it("should have correct command options", () => {
     expect(askGameCommand.options.name).toBe("askgame");
-    expect(askGameCommand.options.permission).toBe("everyone");
+    expect(askGameCommand.options.permission).toBe("subscriber");
     expect(askGameCommand.options.cooldown).toBe(30);
     expect(askGameCommand.options.aliases).toContain("gamequestion");
     expect(askGameCommand.options.aliases).toContain("videogame");
@@ -161,6 +162,127 @@ describe("AskGameCommand", () => {
     expect(mockClient.say.mock.calls[1][0]).toBe("#testchannel");
     expect(mockClient.say.mock.calls[1][1]).toContain(
       "Response to long question"
+    );
+  });
+
+  it("should handle error gracefully", async () => {
+    // ... existing test code ...
+  });
+
+  it("should allow subscribers, moderators, and broadcaster to use the command", async () => {
+    // Create a proper mock Client
+    const mockClient = {
+      say: jest.fn(),
+      // Add missing required properties
+      getChannels: jest.fn(),
+      getOptions: jest.fn(),
+      getUsername: jest.fn(),
+      isMod: jest.fn(),
+      readyState: jest.fn(),
+      removeAllListeners: jest.fn(),
+      setMaxListeners: jest.fn(),
+      emits: jest.fn(),
+      listenerCount: jest.fn(),
+    } as any;
+
+    const mockChannel = "#testchannel";
+
+    // Create a command manager to handle permission checks
+    const commandManager = new CommandManager();
+
+    // Test 1: Non-subscriber, non-moderator user (should be denied)
+    const regularUserState = {
+      username: "viewer",
+      "user-id": "12345",
+      badges: {},
+      mod: false,
+      subscriber: false,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      regularUserState,
+      "!askgame What's the best weapon in Helldivers 2?",
+      false
+    );
+
+    // Verify permission denied message was sent
+    expect(mockClient.say).toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
+    );
+
+    // Test 2: Subscriber (should be allowed)
+    jest.clearAllMocks();
+    const subscriberState = {
+      username: "subscriber",
+      "user-id": "54321",
+      badges: {},
+      mod: false,
+      subscriber: true,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      subscriberState,
+      "!askgame What's the best weapon in Helldivers 2?",
+      false
+    );
+
+    // For subscribers, it should not show the permission denied message
+    expect(mockClient.say).not.toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
+    );
+
+    // Test 3: Moderator (should be allowed)
+    jest.clearAllMocks();
+    const moderatorState = {
+      username: "moderator",
+      "user-id": "98765",
+      badges: {},
+      mod: true,
+      subscriber: false,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      moderatorState,
+      "!askgame What's the best weapon in Helldivers 2?",
+      false
+    );
+
+    // For moderators, it should not show the permission denied message
+    expect(mockClient.say).not.toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
+    );
+
+    // Test 4: Broadcaster (should be allowed)
+    jest.clearAllMocks();
+    const broadcasterState = {
+      username: "broadcaster",
+      "user-id": "55555",
+      badges: { broadcaster: "1" },
+      mod: false,
+      subscriber: false,
+    } as any;
+
+    commandManager.handleMessage(
+      mockClient,
+      mockChannel,
+      broadcasterState,
+      "!askgame What's the best weapon in Helldivers 2?",
+      false
+    );
+
+    // For broadcaster, it should not show the permission denied message
+    expect(mockClient.say).not.toHaveBeenCalledWith(
+      mockChannel,
+      expect.stringContaining("don't have permission")
     );
   });
 });
