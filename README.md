@@ -1,6 +1,6 @@
 # TwitchBot with OpenAI Integration
 
-A modern Twitch chatbot for a variety of streaming content, including Pathfinder 2e, D&D, and video games like Helldivers 2, Hearthstone, Baldur's Gate 3, and Cyberpunk 2077. Features intelligent responses powered by OpenAI.
+A modern Twitch chatbot for a variety of streaming content, including D&D, Pathfinder 2e, Call of Cthulhu, and video games like Helldivers 2, Hearthstone, Baldur's Gate 3, and Cyberpunk 2077. Features intelligent responses powered by OpenAI.
 
 ## Features
 
