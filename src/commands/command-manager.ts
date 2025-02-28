@@ -112,12 +112,13 @@ export class CommandManager {
       message,
       args,
       isBroadcaster: userstate.badges?.broadcaster === "1",
-      isModerator: userstate.mod || userstate.badges?.broadcaster === "1",
-      isSubscriber: userstate.subscriber || false,
+      isModerator:
+        Boolean(userstate.mod) || userstate.badges?.broadcaster === "1",
+      isSubscriber: Boolean(userstate.subscriber),
       isVIP:
         userstate.badges?.vip === "1" ||
         userstate.badges?.broadcaster === "1" ||
-        userstate.mod ||
+        Boolean(userstate.mod) ||
         false,
     };
 
@@ -149,19 +150,20 @@ export class CommandManager {
         return userstate.badges?.broadcaster === "1";
 
       case COMMAND_PERMISSIONS.MODERATOR:
-        return userstate.mod || userstate.badges?.broadcaster === "1";
+      case "moderator": // For backwards compatibility
+        return Boolean(userstate.mod) || userstate.badges?.broadcaster === "1";
 
       case COMMAND_PERMISSIONS.VIP:
         return (
           userstate.badges?.vip === "1" ||
-          userstate.mod ||
+          Boolean(userstate.mod) ||
           userstate.badges?.broadcaster === "1"
         );
 
       case COMMAND_PERMISSIONS.SUBSCRIBER:
         return (
-          userstate.subscriber ||
-          userstate.mod ||
+          Boolean(userstate.subscriber) ||
+          Boolean(userstate.mod) ||
           userstate.badges?.broadcaster === "1"
         );
 
