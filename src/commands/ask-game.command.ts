@@ -1,6 +1,6 @@
-import { Command, CommandContext, CommandOptions } from "./command.interface";
-import { BOT_CONFIG } from "../config";
-import { openAIService } from "../services/openai.service";
+import { Command, CommandContext, CommandOptions } from "./command.interface.js";
+import { BOT_CONFIG } from "../config.js";
+import { openAIService } from "../services/openai.service.js";
 
 export class AskGameCommand implements Command {
   options: CommandOptions = {

@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { OPENAI_CONFIG } from "../config";
+import { OPENAI_CONFIG } from "../config.js";
 
 class OpenAIService {
   private client: OpenAI;

@@ -1,10 +1,10 @@
 import { Client } from "tmi.js";
 import _ from "lodash";
 
-import { TWITCH_CLIENT_OPTIONS, BOT_CONFIG } from "./config";
-import { CommandManager } from "./commands/command-manager";
-import { CommandsCommand } from "./commands/commands.command";
-import { moderationService } from "./services/moderation.service";
+import { TWITCH_CLIENT_OPTIONS, BOT_CONFIG } from "./config.js";
+import { CommandManager } from "./commands/command-manager.js";
+import { CommandsCommand } from "./commands/commands.command.js";
+import { moderationService } from "./services/moderation.service.js";
 
 export function configureBot(): Client {
   // Create the Twitch client with our options

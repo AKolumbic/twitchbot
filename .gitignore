@@ -1,9 +1,16 @@
-# Dependencies
+# Dependency directories
 node_modules/
+
+# Build outputs
+dist/
+dist-cjs/
 
 # Environment variables
 .env
-.env.*
+.env.local
+.env.development
+.env.test
+.env.production
 
 # Logs
 logs
@@ -16,8 +23,14 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Build directory
-dist/
+# Coverage directory
+coverage/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
 
 notes.ts
 secrets.ts

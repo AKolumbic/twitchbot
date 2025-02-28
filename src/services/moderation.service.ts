@@ -1,5 +1,5 @@
 import { Client, Userstate } from "tmi.js";
-import { MODERATION_CONFIG } from "../config";
+import { MODERATION_CONFIG } from "../config.js";
 
 export class ModerationService {
   private bannedWords: string[];

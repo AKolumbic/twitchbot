@@ -1,59 +1,65 @@
+#!/usr/bin/env node
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// Get the directory name of the current module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Function to add .js extension to import paths that don't have it
-function fixImportsInFile(filePath) {
-  console.log(`Fixing imports in: ${filePath}`);
+// Function to recursively find all TypeScript files
+function findTsFiles(dir, fileList = []) {
+  const files = fs.readdirSync(dir);
 
-  // Read the file
+  files.forEach((file) => {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      findTsFiles(filePath, fileList);
+    } else if (file.endsWith(".ts")) {
+      fileList.push(filePath);
+    }
+  });
+
+  return fileList;
+}
+
+// Function to fix imports in a file
+function fixImportsInFile(filePath) {
+  console.log(`Processing ${filePath}`);
   let content = fs.readFileSync(filePath, "utf8");
 
-  // Replace relative imports that don't have file extensions
-  // This regex looks for import statements with relative paths that don't end with a file extension
-  const importRegex = /from\s+["'](\.[^"']*?)["']/g;
+  // Regular expression to match import statements from local files without .js extension
+  const importRegex =
+    /import\s+(?:{[^}]*}|\*\s+as\s+[^;]*|[^;{]*)\s+from\s+['"]([^'"]*)['"]/g;
+
+  // Replace imports with .js extension for local files
   content = content.replace(importRegex, (match, importPath) => {
-    // If the import path doesn't already have an extension and doesn't end with a directory separator
-    if (!importPath.match(/\.[a-zA-Z0-9]+$/) && !importPath.endsWith("/")) {
-      return `from "${importPath}.js"`;
+    // Skip node_modules imports
+    if (importPath.startsWith(".") && !importPath.endsWith(".js")) {
+      return match.replace(importPath, `${importPath}.js`);
     }
     return match;
   });
 
-  // Also fix dynamic imports
-  const dynamicImportRegex = /import\s*\(\s*["'](\.[^"']*?)["']\s*\)/g;
-  content = content.replace(dynamicImportRegex, (match, importPath) => {
-    if (!importPath.match(/\.[a-zA-Z0-9]+$/) && !importPath.endsWith("/")) {
-      return `import("${importPath}.js")`;
-    }
-    return match;
-  });
-
-  // Write the file back
   fs.writeFileSync(filePath, content);
 }
 
-// Function to recursively process a directory
-function processDirectory(directory) {
-  const entries = fs.readdirSync(directory, { withFileTypes: true });
+// Main function
+function main() {
+  const srcDir = path.join(__dirname, "src");
+  const tsFiles = findTsFiles(srcDir);
 
-  for (const entry of entries) {
-    const fullPath = path.join(directory, entry.name);
+  console.log(`Found ${tsFiles.length} TypeScript files`);
 
-    if (entry.isDirectory()) {
-      processDirectory(fullPath);
-    } else if (entry.isFile() && entry.name.endsWith(".js")) {
-      fixImportsInFile(fullPath);
-    }
-  }
+  tsFiles.forEach((file) => {
+    fixImportsInFile(file);
+  });
+
+  console.log("All imports fixed!");
 }
 
-// Start processing from the dist directory
-const distDir = path.join(__dirname, "dist");
-processDirectory(distDir);
-
-console.log("All imports fixed successfully!");
+main();
 
