@@ -15,7 +15,7 @@ import {
 import type { Mock, SpyInstance } from "jest-mock";
 
 // Mock all command imports
-jest.mock("../commands/info.command.js", () => ({
+jest.mock("../../commands/info.command.js", () => ({
   InfoCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "info",
@@ -26,7 +26,7 @@ jest.mock("../commands/info.command.js", () => ({
   })),
 }));
 
-jest.mock("../commands/ask.command.js", () => ({
+jest.mock("../../commands/ask.command.js", () => ({
   AskCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "ask",
@@ -38,7 +38,7 @@ jest.mock("../commands/ask.command.js", () => ({
   })),
 }));
 
-jest.mock("../commands/roll.command.js", () => ({
+jest.mock("../../commands/roll.command.js", () => ({
   RollCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "roll",
@@ -49,58 +49,63 @@ jest.mock("../commands/roll.command.js", () => ({
   })),
 }));
 
-jest.mock("../commands/campaign.command.js", () => ({
+jest.mock("../../commands/campaign.command.js", () => ({
   CampaignCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "campaign",
-      description: "Get campaign info",
+      description: "Get information about current TTRPG campaigns",
       aliases: ["campaigns"],
       permission: "everyone",
+      usage: "!campaign [name]",
     },
     execute: jest.fn().mockReturnValue(undefined),
   })),
 }));
 
-jest.mock("../commands/character.command.js", () => ({
+jest.mock("../../commands/character.command.js", () => ({
   CharacterCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "character",
-      description: "Get character info",
+      description: "Get information about Drosshole's current characters",
       aliases: ["char", "characters"],
       permission: "everyone",
+      usage: "!character [name]",
     },
     execute: jest.fn().mockReturnValue(undefined),
   })),
 }));
 
-jest.mock("../commands/game.command.js", () => ({
+jest.mock("../../commands/game.command.js", () => ({
   GameCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "game",
-      description: "Get game info",
-      aliases: ["games"],
+      description: "Get information about games Drosshole streams",
+      aliases: ["games", "videogame"],
       permission: "everyone",
+      usage: "!game [name]",
     },
     execute: jest.fn().mockReturnValue(undefined),
   })),
 }));
 
-jest.mock("../commands/schedule.command.js", () => ({
+jest.mock("../../commands/schedule.command.js", () => ({
   ScheduleCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "schedule",
-      description: "Get schedule",
+      description: "Show schedule",
       permission: "everyone",
     },
     execute: jest.fn().mockReturnValue(undefined),
   })),
 }));
 
-jest.mock("../commands/ask-ttrpg.command.js", () => ({
+jest.mock("../../commands/ask-ttrpg.command.js", () => ({
   AskTtrpgCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "ttrpg",
-      description: "Ask about TTRPG",
+      description: "Ask about Pathfinder 2e or D&D rules, lore, or mechanics",
+      usage: "!ttrpg <your question>",
+      cooldown: 30,
       permission: "everyone",
       aliases: ["pf2e", "dnd", "pathfinder"],
     },
@@ -108,7 +113,7 @@ jest.mock("../commands/ask-ttrpg.command.js", () => ({
   })),
 }));
 
-jest.mock("../commands/ask-game.command.js", () => ({
+jest.mock("../../commands/ask-game.command.js", () => ({
   AskGameCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "askgame",
@@ -119,12 +124,12 @@ jest.mock("../commands/ask-game.command.js", () => ({
   })),
 }));
 
-jest.mock("../commands/helldivers.command.js", () => ({
+jest.mock("../../commands/helldivers.command.js", () => ({
   HelldiversCommand: jest.fn().mockImplementation(() => ({
     options: {
       name: "helldivers",
-      description: "Helldivers info",
-      aliases: ["hd", "hd2"],
+      description: "Get a random Helldivers 2 tip or strategy",
+      aliases: ["hd2", "helldivers2", "divers"],
       permission: "everyone",
     },
     execute: jest.fn().mockReturnValue(undefined),
@@ -132,14 +137,14 @@ jest.mock("../commands/helldivers.command.js", () => ({
 }));
 
 // Mock the config
-jest.mock("../config.js", () => ({
+jest.mock("../../config.js", () => ({
   BOT_CONFIG: {
     NAME: "TestBot",
     PREFIX: "!",
   },
   COMMAND_PERMISSIONS: {
     BROADCASTER: "broadcaster",
-    MODERATOR: "mod",
+    MODERATOR: "moderator",
     VIP: "vip",
     SUBSCRIBER: "subscriber",
     EVERYONE: "everyone",
