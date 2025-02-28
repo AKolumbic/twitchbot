@@ -1,14 +1,15 @@
 # Twitch Bot
 
-A modernized bot for Twitch channels with OpenAI integration, command handling, and moderation capabilities. This bot is designed to enhance interaction in stream chats by providing various commands for rolling dice, getting game information, asking AI-powered questions, and more.
+A modernized bot for Twitch channels with OpenAI integration, command handling, and moderation capabilities. This bot is designed to enhance interaction in stream chats by providing AI-powered responses, TTRPG tools, game information, and channel management features.
 
 ## Features
 
 - **Robust Command System**: Command handler with aliases, permissions, and cooldowns
-- **AI-Powered Responses**: OpenAI integration for intelligent responses to questions
-- **Specialized AI Commands**: Tailored AI responses for TTRPG and games
+- **AI-Powered Responses**: OpenAI integration for intelligent responses to various types of questions
+- **Specialized AI Commands**: Tailored AI responses for TTRPG and specific video games
 - **Dice Rolling**: Advanced dice rolling system for tabletop games
-- **Game Information**: Commands to track current games, campaigns, and characters
+- **Campaign & Character Tracking**: Commands to track TTRPG campaigns and characters
+- **Game Information**: Commands to provide details about streamed games
 - **Moderation Tools**: Chat moderation features to maintain a healthy chat environment
 - **Helldivers 2 Integration**: Random tips and strategies for Helldivers 2 players
 - **Stream Schedule**: Command to display the streaming schedule
@@ -17,19 +18,19 @@ A modernized bot for Twitch channels with OpenAI integration, command handling, 
 
 The bot supports the following commands:
 
-| Command     | Description                        | Usage                                    | Permission           |
-| ----------- | ---------------------------------- | ---------------------------------------- | -------------------- |
-| !ask        | Ask the AI a general question      | `!ask <your question>`                   | Everyone             |
-| !ask-ttrpg  | Ask the AI a tabletop RPG question | `!ask-ttrpg <your question>`             | Everyone             |
-| !ask-game   | Ask the AI a video game question   | `!ask-game <your question>`              | Everyone             |
-| !roll       | Roll dice for tabletop games       | `!roll <number>d<sides> [+/-<modifier>]` | Everyone             |
-| !campaign   | Get or set current campaign info   | `!campaign [set <info>]`                 | Mod/Set: Broadcaster |
-| !character  | Get or set current character info  | `!character [set <info>]`                | Mod/Set: Broadcaster |
-| !game       | Get or set current game info       | `!game [set <info>]`                     | Mod/Set: Broadcaster |
-| !schedule   | Show stream schedule               | `!schedule`                              | Everyone             |
-| !helldivers | Get a random Helldivers 2 tip      | `!helldivers`                            | Everyone             |
-| !info       | Show bot information               | `!info`                                  | Everyone             |
-| !commands   | List available commands            | `!commands`                              | Everyone             |
+| Command     | Description                                | Usage                                    | Permission |
+| ----------- | ------------------------------------------ | ---------------------------------------- | ---------- |
+| !ask        | Ask the AI a general question              | `!ask <your question>`                   | Subscriber |
+| !ttrpg      | Ask about TTRPG rules, lore, or mechanics  | `!ttrpg <your question>`                 | Subscriber |
+| !askgame    | Ask about specific video games             | `!askgame <your question>`               | Subscriber |
+| !roll       | Roll dice for tabletop games               | `!roll <number>d<sides> [+/-<modifier>]` | Everyone   |
+| !campaign   | Get information about TTRPG campaigns      | `!campaign [name]`                       | Everyone   |
+| !character  | Get information about TTRPG characters     | `!character [name]`                      | Everyone   |
+| !game       | Get information about streamed games       | `!game [name]`                           | Everyone   |
+| !schedule   | Show stream schedule                       | `!schedule`                              | Everyone   |
+| !helldivers | Get a random Helldivers 2 tip              | `!helldivers`                            | Everyone   |
+| !info       | Show channel and bot information           | `!info`                                  | Everyone   |
+| !commands   | List available commands or command details | `!commands [command name]`               | Everyone   |
 
 ## Setup
 
