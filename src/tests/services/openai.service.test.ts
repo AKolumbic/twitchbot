@@ -1,6 +1,11 @@
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import { openAIService } from "../../services/openai.service.js";
 
+// Mock console.error to prevent test output pollution
+beforeEach(() => {
+  jest.spyOn(console, "error").mockImplementation(() => {});
+});
+
 // Mock the OpenAI client
 jest.mock("openai", () => {
   const mockCreateFn = jest.fn();
@@ -90,12 +95,56 @@ describe("OpenAIService", () => {
       expect(response).toBe(
         "There was an error generating a response. Please try again later."
       );
+      expect(console.error).toHaveBeenCalledWith(
+        "Error generating OpenAI response:",
+        expect.any(Object)
+      );
     });
 
     it("should handle empty response gracefully", async () => {
       // Setup the mock to return empty response
       mockCompletionsCreate.mockResolvedValue({
         choices: [],
+      });
+
+      // Call the method
+      const response = await openAIService.generateResponse("Test prompt");
+
+      // Assertions
+      expect(response).toBe(
+        "Sorry, I couldn't generate a response at this time."
+      );
+    });
+
+    it("should handle response with no message content", async () => {
+      // Setup the mock to return response with no content
+      mockCompletionsCreate.mockResolvedValue({
+        choices: [
+          {
+            message: {
+              // No content property
+            },
+          },
+        ],
+      });
+
+      // Call the method
+      const response = await openAIService.generateResponse("Test prompt");
+
+      // Assertions
+      expect(response).toBe(
+        "Sorry, I couldn't generate a response at this time."
+      );
+    });
+
+    it("should handle response with null message", async () => {
+      // Setup the mock to return response with null message
+      mockCompletionsCreate.mockResolvedValue({
+        choices: [
+          {
+            // No message property
+          },
+        ],
       });
 
       // Call the method
@@ -131,6 +180,59 @@ describe("OpenAIService", () => {
       const callArgs = mockCompletionsCreate.mock.calls[0][0];
       expect(callArgs.messages[0].content).toContain("tabletop RPG expert");
     });
+
+    it("should handle errors gracefully in TTRPG responses", async () => {
+      // Setup the mock to throw an error
+      mockCompletionsCreate.mockRejectedValue(new Error("API Error"));
+
+      // Call the method
+      const response = await openAIService.getTtrpgResponse("D&D question");
+
+      // Assertions
+      expect(response).toBe(
+        "There was an error generating a TTRPG response. Please try again later."
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        "Error generating TTRPG response:",
+        expect.any(Object)
+      );
+    });
+
+    it("should handle empty TTRPG responses gracefully", async () => {
+      // Setup the mock to return empty response
+      mockCompletionsCreate.mockResolvedValue({
+        choices: [],
+      });
+
+      // Call the method
+      const response = await openAIService.getTtrpgResponse("D&D question");
+
+      // Assertions
+      expect(response).toBe(
+        "Sorry, I couldn't generate a TTRPG response at this time."
+      );
+    });
+
+    it("should handle TTRPG response with no message content", async () => {
+      // Setup the mock to return response with no content
+      mockCompletionsCreate.mockResolvedValue({
+        choices: [
+          {
+            message: {
+              // No content property
+            },
+          },
+        ],
+      });
+
+      // Call the method
+      const response = await openAIService.getTtrpgResponse("D&D question");
+
+      // Assertions
+      expect(response).toBe(
+        "Sorry, I couldn't generate a TTRPG response at this time."
+      );
+    });
   });
 
   describe("getGameResponse", () => {
@@ -155,6 +257,74 @@ describe("OpenAIService", () => {
       // Check that the system message includes video game context
       const callArgs = mockCompletionsCreate.mock.calls[0][0];
       expect(callArgs.messages[0].content).toContain("video game expert");
+    });
+
+    it("should handle errors gracefully in game responses", async () => {
+      // Setup the mock to throw an error
+      mockCompletionsCreate.mockRejectedValue(new Error("API Error"));
+
+      // Call the method
+      const response = await openAIService.getGameResponse("Game question");
+
+      // Assertions
+      expect(response).toBe(
+        "There was an error generating a gaming response. Please try again later."
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        "Error generating game response:",
+        expect.any(Object)
+      );
+    });
+
+    it("should handle empty game responses gracefully", async () => {
+      // Setup the mock to return empty response
+      mockCompletionsCreate.mockResolvedValue({
+        choices: [],
+      });
+
+      // Call the method
+      const response = await openAIService.getGameResponse("Game question");
+
+      // Assertions
+      expect(response).toBe(
+        "Sorry, I couldn't generate a gaming response at this time."
+      );
+    });
+
+    it("should handle game response with no message content", async () => {
+      // Setup the mock to return response with no content
+      mockCompletionsCreate.mockResolvedValue({
+        choices: [
+          {
+            message: {
+              // No content property
+            },
+          },
+        ],
+      });
+
+      // Call the method
+      const response = await openAIService.getGameResponse("Game question");
+
+      // Assertions
+      expect(response).toBe(
+        "Sorry, I couldn't generate a gaming response at this time."
+      );
+    });
+
+    it("should handle game response with null choices", async () => {
+      // Setup the mock to return null choices
+      mockCompletionsCreate.mockResolvedValue({
+        choices: null,
+      });
+
+      // Call the method
+      const response = await openAIService.getGameResponse("Game question");
+
+      // Assertions
+      expect(response).toBe(
+        "There was an error generating a gaming response. Please try again later."
+      );
     });
   });
 });

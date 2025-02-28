@@ -145,6 +145,30 @@ describe("CampaignCommand", () => {
     );
   });
 
+  it("should provide details for campaigns when looking up by exact key", () => {
+    // Set up the args to request using the exact key
+    mockContext.args = ["stolen-fate"];
+
+    // Execute the command
+    campaignCommand.execute(mockContext);
+
+    // Check that the client.say method was called with details about Stolen Fate
+    expect(mockClient.say).toHaveBeenCalledWith(
+      "#testchannel",
+      expect.stringContaining("Stolen Fate")
+    );
+
+    // Now test with the other campaign key
+    mockContext.args = ["hometown-heroes"];
+    campaignCommand.execute(mockContext);
+
+    // Check that the client.say method was called with details about Hometown Heroes
+    expect(mockClient.say).toHaveBeenCalledWith(
+      "#testchannel",
+      expect.stringContaining("Hometown Heroes")
+    );
+  });
+
   it("should provide error message when an unknown campaign is requested", () => {
     // Set up the args with an unknown campaign name
     mockContext.args = ["unknown", "campaign"];

@@ -189,7 +189,7 @@ describe("CommandManager", () => {
     modCommand = createMockCommand({
       name: "modonly",
       description: "Moderator only command",
-      permission: "mod",
+      permission: "moderator",
     });
 
     vipCommand = createMockCommand({
@@ -957,6 +957,229 @@ describe("CommandManager", () => {
     expect(commands).toHaveLength(2);
     expect(commands).toContain(mockCommand);
     expect(commands).toContain(broadcasterCommand);
+  });
+
+  it("should handle empty command name", () => {
+    // Create a new manager
+    const testManager = new CommandManager();
+
+    // Setup userstate and message with just the prefix
+    const userstate = {
+      username: "testuser",
+      "user-id": "12345",
+      badges: {},
+      mod: false,
+    } as any;
+    const message = "!";
+
+    // Call handle message
+    testManager.handleMessage(
+      mockClient,
+      "#channel",
+      userstate,
+      message,
+      false
+    );
+
+    // Verify that no client.say was called since no command was found
+    expect(mockClient.say).not.toHaveBeenCalled();
+  });
+
+  it("should handle default permission case", () => {
+    // Create a command with an invalid permission that will fall to default
+    const defaultPermCommand = createMockCommand({
+      name: "defaultpermcommand",
+      description: "Command with invalid permission",
+      permission: "invalidperm", // This should trigger the default case
+    });
+
+    // Create a new manager
+    const testManager = new CommandManager();
+
+    // Clear existing commands and register our command
+    // @ts-ignore
+    testManager.commands.clear();
+    testManager.registerCommand(defaultPermCommand);
+
+    // Test user state
+    const userState = {
+      username: "viewer",
+      "user-id": "12345",
+      badges: {},
+      mod: false,
+    } as any;
+
+    // Execute command
+    testManager.handleMessage(
+      mockClient,
+      "#channel",
+      userState,
+      "!defaultpermcommand",
+      false
+    );
+
+    // Command should execute since default permission is "everyone"
+    expect(defaultPermCommand.execute).toHaveBeenCalled();
+  });
+
+  it("should handle null badges in permission checks", () => {
+    // Create a new manager
+    const testManager = new CommandManager();
+
+    // Clear existing commands and register our commands
+    // @ts-ignore
+    testManager.commands.clear();
+    testManager.registerCommand(broadcasterCommand);
+    testManager.registerCommand(vipCommand);
+
+    // Test user state with null badges
+    const userStateNullBadges = {
+      username: "viewer",
+      "user-id": "12345",
+      badges: null, // Explicitly null badges
+      mod: false,
+    } as any;
+
+    // Execute broadcaster command with null badges
+    testManager.handleMessage(
+      mockClient,
+      "#channel",
+      userStateNullBadges,
+      "!broadcasteronly",
+      false
+    );
+
+    // Should get permission denied message
+    expect(mockClient.say).toHaveBeenCalledWith(
+      "#channel",
+      expect.stringContaining("don't have permission")
+    );
+    expect(broadcasterCommand.execute).not.toHaveBeenCalled();
+
+    // Reset mocks
+    jest.clearAllMocks();
+
+    // Execute VIP command with null badges
+    testManager.handleMessage(
+      mockClient,
+      "#channel",
+      userStateNullBadges,
+      "!viponly",
+      false
+    );
+
+    // Should get permission denied message
+    expect(mockClient.say).toHaveBeenCalledWith(
+      "#channel",
+      expect.stringContaining("don't have permission")
+    );
+    expect(vipCommand.execute).not.toHaveBeenCalled();
+  });
+
+  it("should handle undefined badges in permission checks", () => {
+    // Create a new manager
+    const testManager = new CommandManager();
+
+    // Clear existing commands and register our commands
+    // @ts-ignore
+    testManager.commands.clear();
+    testManager.registerCommand(broadcasterCommand);
+
+    // Test user state with undefined badges
+    const userStateUndefinedBadges = {
+      username: "viewer",
+      "user-id": "12345",
+      // badges is intentionally omitted to test undefined case
+      mod: false,
+    } as any;
+
+    // Execute broadcaster command with undefined badges
+    testManager.handleMessage(
+      mockClient,
+      "#channel",
+      userStateUndefinedBadges,
+      "!broadcasteronly",
+      false
+    );
+
+    // Should get permission denied message
+    expect(mockClient.say).toHaveBeenCalledWith(
+      "#channel",
+      expect.stringContaining("don't have permission")
+    );
+    expect(broadcasterCommand.execute).not.toHaveBeenCalled();
+  });
+
+  it("should directly test hasPermission method for all cases", () => {
+    // Create a new manager
+    const testManager = new CommandManager();
+
+    // Test broadcaster permission with various badge states
+    const userWithBroadcasterBadge = {
+      badges: { broadcaster: "1" },
+    } as any;
+    const userWithoutBroadcasterBadge = {
+      badges: { subscriber: "1" },
+    } as any;
+    const userWithNullBadges = {
+      badges: null,
+    } as any;
+    const userWithUndefinedBadges = {} as any;
+
+    // Access the private method using type assertion
+    expect(
+      (testManager as any).hasPermission(
+        userWithBroadcasterBadge,
+        "broadcaster"
+      )
+    ).toBe(true);
+    expect(
+      (testManager as any).hasPermission(
+        userWithoutBroadcasterBadge,
+        "broadcaster"
+      )
+    ).toBe(false);
+    expect(
+      (testManager as any).hasPermission(userWithNullBadges, "broadcaster")
+    ).toBe(false);
+    expect(
+      (testManager as any).hasPermission(userWithUndefinedBadges, "broadcaster")
+    ).toBe(false);
+
+    // Test moderator permission
+    const modUser = { mod: true, badges: {} } as any;
+    const nonModUser = { mod: false, badges: {} } as any;
+    expect((testManager as any).hasPermission(modUser, "moderator")).toBe(true);
+    expect((testManager as any).hasPermission(nonModUser, "moderator")).toBe(
+      false
+    );
+
+    // Test VIP permission
+    const vipUser = { badges: { vip: "1" }, mod: false } as any;
+    const nonVipUser = { badges: {}, mod: false } as any;
+    expect((testManager as any).hasPermission(vipUser, "vip")).toBe(true);
+    expect((testManager as any).hasPermission(nonVipUser, "vip")).toBe(false);
+
+    // Test subscriber permission
+    const subUser = { subscriber: true, badges: {}, mod: false } as any;
+    const nonSubUser = { subscriber: false, badges: {}, mod: false } as any;
+    expect((testManager as any).hasPermission(subUser, "subscriber")).toBe(
+      true
+    );
+    expect((testManager as any).hasPermission(nonSubUser, "subscriber")).toBe(
+      false
+    );
+
+    // Test default/everyone permission
+    expect((testManager as any).hasPermission(nonSubUser, "everyone")).toBe(
+      true
+    );
+    expect(
+      (testManager as any).hasPermission(nonSubUser, "unknown_permission")
+    ).toBe(true);
+    expect((testManager as any).hasPermission(nonSubUser, undefined)).toBe(
+      true
+    );
   });
 });
 
