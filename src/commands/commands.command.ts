@@ -1,6 +1,10 @@
-import { Command, CommandContext, CommandOptions } from "./command.interface";
-import { BOT_CONFIG } from "../config";
-import { CommandManager } from "./command-manager";
+import {
+  Command,
+  CommandContext,
+  CommandOptions,
+} from "./command.interface.js";
+import { BOT_CONFIG } from "../config.js";
+import { CommandManager } from "./command-manager.js";
 
 export class CommandsCommand implements Command {
   options: CommandOptions = {

@@ -1,18 +1,18 @@
 import { Client, Userstate } from "tmi.js";
-import { Command, CommandContext } from "./command.interface";
-import { BOT_CONFIG, COMMAND_PERMISSIONS } from "../config";
+import { Command, CommandContext } from "./command.interface.js";
+import { BOT_CONFIG, COMMAND_PERMISSIONS } from "../config.js";
 
 // Import commands
-import { InfoCommand } from "./info.command";
-import { AskCommand } from "./ask.command";
-import { RollCommand } from "./roll.command";
-import { CampaignCommand } from "./campaign.command";
-import { CharacterCommand } from "./character.command";
-import { GameCommand } from "./game.command";
-import { ScheduleCommand } from "./schedule.command";
-import { AskTtrpgCommand } from "./ask-ttrpg.command";
-import { AskGameCommand } from "./ask-game.command";
-import { HelldiversCommand } from "./helldivers.command";
+import { InfoCommand } from "./info.command.js";
+import { AskCommand } from "./ask.command.js";
+import { RollCommand } from "./roll.command.js";
+import { CampaignCommand } from "./campaign.command.js";
+import { CharacterCommand } from "./character.command.js";
+import { GameCommand } from "./game.command.js";
+import { ScheduleCommand } from "./schedule.command.js";
+import { AskTtrpgCommand } from "./ask-ttrpg.command.js";
+import { AskGameCommand } from "./ask-game.command.js";
+import { HelldiversCommand } from "./helldivers.command.js";
 
 export class CommandManager {
   private commands: Map<string, Command> = new Map();

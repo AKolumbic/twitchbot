@@ -1,5 +1,5 @@
-import { Command, CommandContext, CommandOptions } from "./command.interface";
-import { BOT_CONFIG } from "../config";
+import { Command, CommandContext, CommandOptions } from "./command.interface.js";
+import { BOT_CONFIG } from "../config.js";
 
 export class RollCommand implements Command {
   options: CommandOptions = {
