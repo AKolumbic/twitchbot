@@ -40,7 +40,7 @@ The bot supports the following commands:
    ```
    npm install
    ```
-4. Create a `.env` file with your Twitch and OpenAI credentials (see `.env.example` if available)
+4. Create a `.env` file with your Twitch and OpenAI credentials
 5. Build the project:
    ```
    npm run build
