@@ -1,6 +1,6 @@
 # Twitch Bot
 
-A modernized bot for Twitch channels with OpenAI integration, command handling, and moderation capabilities. This bot is designed to enhance interaction in stream chats by providing AI-powered responses, TTRPG tools, game information, and channel management features.
+A modernized bot for my Twitch channel with OpenAI integration, command handling, and moderation capabilities. This bot is designed to enhance interaction in stream chats by providing AI-powered responses, TTRPG tools, game information, and channel management features.
 
 ## Features
 
